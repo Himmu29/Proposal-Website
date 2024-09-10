@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Proposal</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFB6C1; /* Soft pink background */
+  }
+
+  .container {
+    text-align: center;
+    background-color: #FF69B4;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .container:hover {
+    transform: scale(1.05);
+  }
+
+  h2 {
+    color: #fff;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    color: #ffe4e1;
+    font-size: 1.8em;
+    margin-bottom: 30px;
+  }
+
+  .btn {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  }
+
+  .btn input {
+    padding: 12px 30px;
+    font-size: 1.2em;
+    color: #fff;
+    background-color: #ff4081;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn input:hover {
+    background-color: #e91e63;
+    transform: scale(1.1);
+  }
+
+  .btn input#No {
+    background-color: #f44336;
+  }
+
+  .btn input#No:hover {
+    background-color: #d32f2f;
+  }
+
+  /* Flower animation on Yes */
+  @keyframes flowerAnimation {
+    0% {
+      opacity: 0;
+      transform: scale(0.1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.1);
+    }
+  }
+
+  .flowers {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 400px;
+    height: 400px;
+    background-image: url('https://cdn.pixabay.com/photo/2016/03/26/22/13/cherry-blossoms-1283974_960_720.png');
+    background-size: cover;
+    opacity: 0;
+    animation: flowerAnimation 2s ease-out forwards;
+  }
+
+  /* Balloon animation */
+  .balloon {
+    position: absolute;
+    bottom: -150px; /* Start below the visible area */
+    width: 60px;
+    height: 80px;
+    background-color: #FF4500; /* Balloon color */
+    border-radius: 50% 50% 0 0;
+    animation: balloonAnimation 2s forwards;
+    z-index: 20;
+  }
+
+  @keyframes balloonAnimation {
+    0% {
+      bottom: -150px;
+      transform: scale(0.5);
+      opacity: 1;
+    }
+    100% {
+      bottom: 100%; /* Move up */
+      transform: scale(1);
+      opacity: 0; /* Fade out */
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>I think we'd be the cutest couple.</h2>
+    <h3> What do you say?</h3>
+    <form action="#">
+      <div class="btn">
+        <input type="button" name="Yes" id="Yes" value="Yes">
+        <input type="button" name="No" id="No" value="No">
+      </div>
+    </form>
+  </div>
+
+  <div class="flowers" id="flowers"></div>
+  <div class="balloons" id="balloons"></div> <!-- Container for balloons -->
+
+  <script>
+    const yesButton = document.getElementById('Yes');
+    const noButton = document.getElementById('No');
+    const cta = document.querySelector('.btn');
+    const flowers = document.getElementById('flowers');
+    const balloonContainer = document.getElementById('balloons');
+
+    // Swap button functionality on click of "No"
+    noButton.addEventListener('click', () => {
+      const yesIndex = Array.from(cta.children).indexOf(yesButton);
+      const noIndex = Array.from(cta.children).indexOf(noButton);
+      if (yesIndex < noIndex) {
+        cta.insertBefore(noButton, yesButton);
+      } else {
+        cta.insertBefore(yesButton, noButton);
+      }
+    });
+
+    // Animation trigger on "Yes" button click
+    yesButton.addEventListener('click', () => {
+      flowers.style.opacity = '1';
+      flowers.style.animation = 'flowerAnimation 2s ease-out forwards';
+
+      // Create balloon elements
+      for (let i = 0; i < 10; i++) { // Create 10 balloons
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = Math.random() * 100 + 'vw';
+        balloonContainer.appendChild(balloon);
+
+        balloon.addEventListener('animationend', () => {
+          balloon.remove();
+        });
+      }
+
+      // Change HTML content to "I KNEW IT"
+      const container = document.querySelector('.container');
+      container.innerHTML = '<h2>I KNEW IT</h2>';
+    });
+  </script>
+</body>
+</html>
